@@ -33,6 +33,12 @@ let CompilerUtil = {
      * @param vm Nue 的实例对象
      */
     model: function (node, value, vm) {
+        // 第二部：在第一次渲染的时候, 就给所有的属性添加观察者
+        new Watcher(vm, value, (newValue, oldValue) => {
+            node.value = newValue;
+            // debugger;
+        });
+
         node.value = this.getValue(vm, value);
     },
     /**
@@ -191,14 +197,22 @@ class Observer {
 
     defineReactive(obj, attr, value) {
         this.observer(value);
+
+        // 第三步：将当前属性的所有观察者对象都放到当前属性的发布订阅对象中管理起来
+        // 创建属于当前属性的发布订阅对象
+        let dep = new Dep();
+
         Object.defineProperty(obj, attr, {
             get() {
+                Dep.target && dep.addSub(Dep.target);
+                // debugger;
                 return value;
             },
             set: (newValue) => {
                 if (value !== newValue) {
                     this.observer(newValue);
                     value = newValue;
+                    dep.notify();
                     console.log('监听到数据的变化, 需要去更新UI');
                 }
             }
@@ -217,7 +231,10 @@ class Watcher {
     }
 
     getOldValue() {
-        return CompilerUtil.getValue(this.vm, this.attr);
+        Dep.target = this;
+        let oldValue = CompilerUtil.getValue(this.vm, this.attr);
+        Dep.target = null;
+        return oldValue;
     }
 
     /**
