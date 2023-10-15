@@ -8,6 +8,11 @@
 <body>
 <div id="app">
     <input type="text" v-model="name"/>
+    <input type="text" v-model="time.h">
+    <input type="text" v-model="time.m">
+    <input type="text" v-model="time.s">
+    <div v-html="html">abc</div>
+    <div v-text="text">123</div>
     <p>{{ name }}</p>
     <p>{{age}}</p>
     <ul>
@@ -22,7 +27,14 @@
         el: document.querySelector('#app'),
         data: {
             name: "BNTang",
-            age: 33
+            age: 33,
+            time: {
+                h: 10,
+                m: 10,
+                s: 10
+            },
+            html: `<div>我是div</div>`,
+            text: `<div>我是div</div>`
         }
     });
 </script>
