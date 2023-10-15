@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue基本模板</title>
+    <script src="js/nue.js"></script>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="name"/>
+    <p>{{ name }}</p>
+    <p>{{age}}</p>
+    <ul>
+        <li>6</li>
+        <li>6</li>
+        <li>6</li>
+    </ul>
+</div>
+
+<script>
+    let vue = new Nue({
+        el: document.querySelector('#app'),
+        data: {
+            name: "BNTang",
+            age: 33
+        }
+    });
+</script>
+</body>
+</html>

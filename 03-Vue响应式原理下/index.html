@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>01-Vue基本模板</title>
+</head>
+<body>
+<script>
+    let obj = {
+        name: 'lnj',
+        // name: {a: 'abc'},
+        age: 33
+    };
+    class Observer{
+        constructor(data){
+            this.observer(data);
+        }
+        observer(obj){
+            if(obj && typeof obj === 'object'){
+                // 遍历取出传入对象的所有属性, 给遍历到的属性都增加get/set方法
+                for(let key in obj){
+                    this.defineRecative(obj, key, obj[key])
+                }
+            }
+        }
+        // obj: 需要操作的对象
+        // attr: 需要新增get/set方法的属性
+        // value: 需要新增get/set方法属性的取值
+        defineRecative(obj, attr, value){
+            // 如果属性的取值又是一个对象, 那么也需要给这个对象的所有属性添加get/set方法
+            this.observer(value);
+            Object.defineProperty(obj, attr, {
+                get(){
+                    return value;
+                },
+                set:(newValue)=>{
+                    if(value !== newValue){
+                        // 如果给属性赋值的新值又是一个对象, 那么也需要给这个对象的所有属性添加get/set方法
+                        this.observer(newValue);
+                        value = newValue;
+                        console.log('监听到数据的变化, 需要去更新UI');
+                    }
+                }
+            })
+        }
+    }
+    new Observer(obj);
+    // obj.name = 'it666';
+    // obj.age = 666;
+    // obj.name.a = 'it666';
+    obj.name = {a: 'abc'};
+    obj.name.a = 'it666';
+</script>
+</body>
+</html>

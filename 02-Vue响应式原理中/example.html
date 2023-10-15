@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example</title>
+</head>
+<body>
+<script>
+    let obj = {};
+    let oldValue = "Example"
+    Object.defineProperty(obj, 'name', {
+        set(newValue) {
+            if (oldValue !== newValue) {
+                console.log("set方法被执行了");
+                oldValue = newValue;
+            }
+        }
+    });
+    obj.name = 'BNTang'
+</script>
+</body>
+</html>

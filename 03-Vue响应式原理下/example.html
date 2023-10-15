@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example</title>
+</head>
+<body>
+<script>
+    let obj = {
+        name: 'BNTang',
+        age: 33
+    };
+
+    class Observer {
+        constructor(data) {
+            this.observer(data);
+        }
+
+        observer(obj) {
+            if (obj && typeof obj === 'object') {
+                for (let key in obj) {
+                    this.defineReactive(obj, key, obj[key]);
+                }
+            }
+        }
+
+        defineReactive(obj, attr, value) {
+            this.observer(value);
+            Object.defineProperty(obj, attr, {
+                get() {
+                    return value;
+                },
+                set: (newValue) => {
+                    if (value !== newValue) {
+                        this.observer(newValue);
+                        value = newValue;
+                        console.log('监听到数据的变化, 需要去更新UI');
+                    }
+                }
+            })
+        }
+    }
+
+    new Observer(obj);
+    obj.name = {a: 'abc'};
+    obj.name.a = 'BNTang';
+</script>
+</body>
+</html>
