@@ -10,8 +10,21 @@ let CompilerUtil = {
         return value.split('.').reduce((data, currentKey) => {
             // 第一次执行: data=$data, currentKey=time
             // 第二次执行: data=time, currentKey=h
-            return data[currentKey];
+            return data[currentKey.trim()];
         }, vm.$data);
+    },
+    /**
+     * 获取指定模板字符串的内容
+     * @param vm Nue 的实例对象
+     * @param value 指令的值
+     */
+    getContent(vm, value) {
+        const reg = /\{\{(.+?)\}\}/gi;
+        return value.replace(reg, (...args) => {
+            // 第一次执行 args[1] = name
+            // 第二次执行 args[1] = age
+            return this.getValue(vm, args[1]);
+        });
     },
     /**
      * 处理 model 指令
@@ -39,6 +52,16 @@ let CompilerUtil = {
      */
     text: function (node, value, vm) {
         node.innerText = this.getValue(vm, value);
+    },
+    /**
+     * 处理模板字符串
+     * @param node 当前元素
+     * @param value 指令的值
+     * @param vm Nue 的实例对象
+     */
+    content: function (node, value, vm) {
+        // console.log(value); // {{ name }} -> name -> $data[name]
+        node.textContent = this.getContent(vm, value);
     }
 }
 
@@ -145,7 +168,7 @@ class Compiler {
         // 编写一个正则表达式, 用来匹配 {{}}
         let reg = /\{\{.+?\}\}/gi;
         if (reg.test(content)) {
-            console.log('是一个文本节点, 需要我们处理', content);
+            CompilerUtil['content'](node, content, this.vm);
         }
     }
 }
