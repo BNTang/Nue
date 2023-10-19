@@ -48,6 +48,9 @@ let CompilerUtil = {
      * @param vm Nue 的实例对象
      */
     html: function (node, value, vm) {
+        new Watcher(vm, value, (newValue, oldValue) => {
+            node.innerHTML = newValue;
+        });
         node.innerHTML = this.getValue(vm, value);
     },
     /**
@@ -57,6 +60,9 @@ let CompilerUtil = {
      * @param vm Nue 的实例对象
      */
     text: function (node, value, vm) {
+        new Watcher(vm, value, (newValue, oldValue) => {
+            node.innerText = newValue;
+        });
         node.innerText = this.getValue(vm, value);
     },
     /**
@@ -67,7 +73,17 @@ let CompilerUtil = {
      */
     content: function (node, value, vm) {
         // console.log(value); // {{ name }} -> name -> $data[name]
-        node.textContent = this.getContent(vm, value);
+        // node.textContent = this.getContent(vm, value);
+
+        let reg = /\{\{(.+?)\}\}/gi;
+
+        node.textContent = value.replace(reg, (...args) => {
+            const attr = args[1].trim();
+            new Watcher(vm, attr, (newValue, oldValue) => {
+                node.textContent = this.getContent(vm, value);
+            });
+            return this.getValue(vm, args[1]);
+        });
     }
 }
 
