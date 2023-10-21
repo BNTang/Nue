@@ -84,7 +84,7 @@ let CompilerUtil = {
         node.addEventListener(type, (e)=>{
             // alert('事件注册成功了');
             vm.$methods[value].call(vm, e);
-        })
+        });
     }
 }
 class Nue {

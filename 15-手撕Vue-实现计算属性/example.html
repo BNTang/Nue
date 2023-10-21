@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue基本模板</title>
+    <script src="js/nue.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>{{ getName }}</p>
+</div>
+
+<script>
+    let vue = new Nue({
+        el: document.querySelector('#app'),
+        data: {
+            name: "BNTang"
+        },
+        computed: {
+            getName() {
+                return this.name + "- 666";
+            }
+        }
+    });
+</script>
+</body>
+</html>
